@@ -14,9 +14,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { User as UserIcon, LogOut, Menu } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
 
 export function Header() {
   const { user, logout } = useAppContext();
@@ -97,6 +98,11 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[300px]">
+                <SheetHeader>
+                    <VisuallyHidden>
+                        <SheetTitle>Mobile Menu</SheetTitle>
+                    </VisuallyHidden>
+                </SheetHeader>
                 <div className="p-4">
                 <Logo />
                 <nav className="mt-8 flex flex-col gap-4">
