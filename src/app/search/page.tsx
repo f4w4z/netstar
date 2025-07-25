@@ -7,11 +7,11 @@ async function SearchResults({ query }: { query: string }) {
 
   return (
     <>
-      <h1 className="text-3xl font-headline font-bold mb-6">
+      <h1 className="text-3xl font-headline font-bold mb-8">
         Search Results for &quot;{query}&quot;
       </h1>
       {results.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-10">
           {results.map(item => (
             <ContentCard key={`${item.type}-${item.id}`} item={item} />
           ))}
