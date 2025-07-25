@@ -4,6 +4,7 @@ export interface ContentItem {
   id: number;
   title: string;
   posterPath: string;
+  backdropPath?: string;
   type: ContentType;
   overview?: string;
   releaseDate?: string;

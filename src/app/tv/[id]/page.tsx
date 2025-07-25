@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { WatchlistButton } from '@/components/WatchlistButton';
 
 export default async function TvShowDetailsPage({ params }: { params: { id: string } }) {
-  const show = await getContentDetails(params.id);
+  const show = await getContentDetails(params.id, 'tv');
 
   if (!show || show.type !== 'tv') {
     notFound();
