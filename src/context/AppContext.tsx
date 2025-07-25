@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, ReactNode, useRef } from 'react';
 import type { ContentItem } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
@@ -25,13 +25,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [watchlist, setWatchlist] = useState<ContentItem[]>([]);
   const { toast } = useToast();
+  const prevWatchlistRef = useRef<ContentItem[]>([]);
 
   useEffect(() => {
-    // Persist/hydrate watchlist from localStorage
     try {
       const storedWatchlist = localStorage.getItem('netstar-watchlist');
       if (storedWatchlist) {
-        setWatchlist(JSON.parse(storedWatchlist));
+        const parsedWatchlist = JSON.parse(storedWatchlist);
+        setWatchlist(parsedWatchlist);
+        prevWatchlistRef.current = parsedWatchlist;
       }
       const storedUser = localStorage.getItem('netstar-user');
       if (storedUser) {
@@ -45,10 +47,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       localStorage.setItem('netstar-watchlist', JSON.stringify(watchlist));
+
+      // Compare current watchlist with previous to determine if item was added or removed
+      if (watchlist.length > prevWatchlistRef.current.length) {
+        const addedItem = watchlist.find(item => !prevWatchlistRef.current.some(prevItem => prevItem.id === item.id));
+        if (addedItem) {
+          toast({
+            title: 'Added to Watchlist',
+            description: `"${addedItem.title}" has been added.`,
+          });
+        }
+      } else if (watchlist.length < prevWatchlistRef.current.length) {
+        const removedItem = prevWatchlistRef.current.find(prevItem => !watchlist.some(item => item.id === prevItem.id));
+        if (removedItem) {
+          toast({
+            title: 'Removed from Watchlist',
+            description: `"${removedItem.title}" has been removed.`,
+          });
+        }
+      }
+
+      prevWatchlistRef.current = watchlist;
     } catch (error) {
         console.error("Could not access localStorage:", error);
     }
-  }, [watchlist]);
+  }, [watchlist, toast]);
 
   useEffect(() => {
     try {
@@ -63,7 +86,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const login = (credentials: { email: string }) => {
-    // Mock login
     const mockUser = { name: 'Demo User', email: credentials.email };
     setUser(mockUser);
     toast({
@@ -97,25 +119,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         });
         return prev;
       }
-      toast({
-        title: 'Added to Watchlist',
-        description: `"${item.title}" has been added to your watchlist.`,
-      });
       return [...prev, item];
     });
   };
 
   const removeFromWatchlist = (itemId: number) => {
-    setWatchlist(prev => {
-      const itemToRemove = prev.find(i => i.id === itemId);
-      if (itemToRemove) {
-        toast({
-          title: 'Removed from Watchlist',
-          description: `"${itemToRemove.title}" has been removed.`,
-        });
-      }
-      return prev.filter(i => i.id !== itemId);
-    });
+    setWatchlist(prev => prev.filter(i => i.id !== itemId));
   };
   
   const isOnWatchlist = (itemId: number) => {
