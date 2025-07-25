@@ -1,23 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { generateRecommendations } from '@/ai/flows/generate-recommendations';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
-
-async function handleRecommendation(viewingHistory: string) {
-  'use server';
-  try {
-    const result = await generateRecommendations({ viewingHistory });
-    return result.recommendations;
-  } catch (error) {
-    console.error(error);
-    return 'An error occurred while generating recommendations.';
-  }
-}
+import { handleRecommendation } from './actions';
 
 export function RecommendationForm() {
   const [history, setHistory] = useState('');

@@ -15,7 +15,7 @@ export default function RecommendationsPage() {
 
   useEffect(() => {
     setIsClient(true);
-    if (localStorage.getItem('reelsharper-user') === null) {
+    if (localStorage.getItem('netstar-user') === null) {
       router.push('/login');
     }
   }, [router]);

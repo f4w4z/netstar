@@ -32,7 +32,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm border-2">
         <CardHeader>
           <CardTitle className="text-2xl font-headline">Sign Up</CardTitle>
-          <CardDescription>Create your ReelSharper account.</CardDescription>
+          <CardDescription>Create your NetStar account.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">

@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'ReelSharper',
+  title: 'NetStar',
   description: 'Your next-gen movie and TV show tracker.',
 };
 

@@ -29,11 +29,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Persist/hydrate watchlist from localStorage
     try {
-      const storedWatchlist = localStorage.getItem('reelsharper-watchlist');
+      const storedWatchlist = localStorage.getItem('netstar-watchlist');
       if (storedWatchlist) {
         setWatchlist(JSON.parse(storedWatchlist));
       }
-      const storedUser = localStorage.getItem('reelsharper-user');
+      const storedUser = localStorage.getItem('netstar-user');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
       }
@@ -44,7 +44,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('reelsharper-watchlist', JSON.stringify(watchlist));
+      localStorage.setItem('netstar-watchlist', JSON.stringify(watchlist));
     } catch (error) {
         console.error("Could not access localStorage:", error);
     }
@@ -53,9 +53,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
         if (user) {
-            localStorage.setItem('reelsharper-user', JSON.stringify(user));
+            localStorage.setItem('netstar-user', JSON.stringify(user));
         } else {
-            localStorage.removeItem('reelsharper-user');
+            localStorage.removeItem('netstar-user');
         }
     } catch (error) {
         console.error("Could not access localStorage:", error);

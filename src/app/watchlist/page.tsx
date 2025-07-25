@@ -15,7 +15,7 @@ export default function WatchlistPage() {
 
   useEffect(() => {
     setIsClient(true);
-    if (localStorage.getItem('reelsharper-user') === null) {
+    if (localStorage.getItem('netstar-user') === null) {
       router.push('/login');
     }
   }, [router]);
@@ -52,7 +52,7 @@ export default function WatchlistPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-headline font-bold mb-6">My Watchlist</h1>
       {watchlist.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-10">
           {watchlist.map(item => (
             <ContentCard key={`${item.type}-${item.id}`} item={item} />
           ))}
