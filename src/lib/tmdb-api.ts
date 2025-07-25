@@ -52,6 +52,8 @@ const toContentItem = (item: TmdbMovie | TmdbTvShow, type: ContentType): Content
   };
 
 async function fetchFromTmdb(endpoint: string) {
+  // Add a small delay to simulate network latency for loading bar
+  await new Promise(resolve => setTimeout(resolve, 500));
   const url = `${BASE_URL}/${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEY}`;
   try {
     const response = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour

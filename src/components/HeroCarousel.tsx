@@ -41,6 +41,8 @@ export function HeroCarousel({ items }: HeroCarouselProps) {
                         alt={`Backdrop for ${item.title}`}
                         fill
                         className="object-cover"
+                        data-ai-hint="movie backdrop"
+                        priority={true}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 lg:p-16 text-white">
