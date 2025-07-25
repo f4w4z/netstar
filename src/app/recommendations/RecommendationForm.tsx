@@ -7,20 +7,32 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { handleRecommendation } from './actions';
+import type { ContentItem } from '@/lib/types';
+import { ContentCard } from '@/components/ContentCard';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
 
 export function RecommendationForm() {
   const [history, setHistory] = useState('');
-  const [recommendations, setRecommendations] = useState('');
+  const [recommendations, setRecommendations] = useState<ContentItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!history.trim()) return;
 
     setIsLoading(true);
-    setRecommendations('');
+    setRecommendations([]);
+    setError(null);
     const result = await handleRecommendation(history);
-    setRecommendations(result);
+    
+    if (result.error) {
+        setError(result.error);
+    } else {
+        setRecommendations(result.recommendations);
+    }
+
     setIsLoading(false);
   };
 
@@ -50,6 +62,7 @@ export function RecommendationForm() {
          <Card className="border-2 border-dashed">
             <CardHeader>
                 <CardTitle className="font-headline">Generating Recommendations...</CardTitle>
+                 <CardDescription>Our AI is searching for your next favorite show.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="flex justify-center items-center py-8">
@@ -59,18 +72,37 @@ export function RecommendationForm() {
          </Card>
       )}
 
-      {recommendations && !isLoading && (
+      {error && (
+        <Alert variant="destructive">
+            <Terminal className="h-4 w-4" />
+            <AlertTitle>Something went wrong!</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {recommendations.length > 0 && !isLoading && (
         <Card className="border-2 border-accent">
           <CardHeader>
             <CardTitle className="font-headline">Here are your recommendations!</CardTitle>
             <CardDescription>Based on your viewing history, you might like these:</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="prose prose-invert max-w-none">
-              <p>{recommendations}</p>
-            </div>
+             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-x-6 gap-y-10">
+                {recommendations.map(item => (
+                    <ContentCard key={`${item.type}-${item.id}`} item={item} />
+                ))}
+             </div>
           </CardContent>
         </Card>
+      )}
+
+      {recommendations.length === 0 && !isLoading && !error && history && (
+         <Card className="border-2 border-dashed">
+         <CardHeader>
+             <CardTitle className="font-headline">No Recommendations Found</CardTitle>
+              <CardDescription>We couldn't find any recommendations based on your input. Try adding more titles.</CardDescription>
+         </CardHeader>
+      </Card>
       )}
     </div>
   );

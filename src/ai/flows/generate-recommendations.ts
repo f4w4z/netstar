@@ -19,9 +19,10 @@ const GenerateRecommendationsInputSchema = z.object({
 export type GenerateRecommendationsInput = z.infer<typeof GenerateRecommendationsInputSchema>;
 
 const GenerateRecommendationsOutputSchema = z.object({
-  recommendations: z
-    .string()
-    .describe('A list of recommended movies and TV shows based on the viewing history.'),
+  recommendations: z.array(z.object({
+    title: z.string().describe("The title of the recommended movie or TV show."),
+    year: z.number().describe("The release year of the movie or TV show."),
+  })).describe('A list of recommended movies and TV shows based on the viewing history.'),
 });
 export type GenerateRecommendationsOutput = z.infer<typeof GenerateRecommendationsOutputSchema>;
 
@@ -38,6 +39,7 @@ const prompt = ai.definePrompt({
   prompt: `You are a movie and TV show recommendation expert.
 
   Based on the user's viewing history, provide a list of recommended movies and TV shows that the user might enjoy.
+  For each recommendation, provide the title and the release year.
 
   Consider the user's preferences and suggest titles that are similar to what they have already watched.
 
