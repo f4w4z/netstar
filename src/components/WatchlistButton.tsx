@@ -8,10 +8,9 @@ import { useEffect, useState } from 'react';
 
 interface WatchlistButtonProps {
   item: ContentItem;
-  variant?: 'add' | 'remove';
 }
 
-export function WatchlistButton({ item, variant = 'add' }: WatchlistButtonProps) {
+export function WatchlistButton({ item }: WatchlistButtonProps) {
   const { addToWatchlist, removeFromWatchlist, isOnWatchlist, user } = useAppContext();
   const [isClient, setIsClient] = useState(false);
 
@@ -20,26 +19,18 @@ export function WatchlistButton({ item, variant = 'add' }: WatchlistButtonProps)
   }, []);
 
   if (!isClient) {
-    // Render a placeholder or nothing on the server
-    return <Button disabled className="w-full md:w-auto"><PlusCircle /> Add to Watchlist</Button>;
+    // Render a placeholder or nothing on the server to avoid hydration mismatch
+    return <Button disabled className="w-full md:w-auto"><PlusCircle className="mr-2" /> Add to Watchlist</Button>;
   }
 
   const onList = isOnWatchlist(item.id);
 
-  if (variant === 'remove') {
-    return (
-      <Button
-        variant="destructive"
-        onClick={() => removeFromWatchlist(item.id)}
-        className="w-full"
-        disabled={!user}
-      >
-        <XCircle /> Remove
-      </Button>
-    );
-  }
-
   const handleClick = () => {
+    if (!user) {
+      // This logic is mostly handled in the context, but as a safeguard:
+      alert('Please log in to manage your watchlist.');
+      return;
+    }
     if (onList) {
       removeFromWatchlist(item.id);
     } else {
@@ -49,7 +40,15 @@ export function WatchlistButton({ item, variant = 'add' }: WatchlistButtonProps)
 
   return (
     <Button onClick={handleClick} disabled={!user} className="w-full md:w-auto">
-      {onList ? <><CheckCircle /> In Watchlist</> : <><PlusCircle /> Add to Watchlist</>}
+      {onList ? (
+        <>
+          <CheckCircle className="mr-2" /> In Watchlist
+        </>
+      ) : (
+        <>
+          <PlusCircle className="mr-2" /> Add to Watchlist
+        </>
+      )}
     </Button>
   );
 }
