@@ -52,7 +52,7 @@ const toContentItem = (item: TmdbMovie | TmdbTvShow, type: ContentType): Content
   };
 
 async function fetchFromTmdb(endpoint: string) {
-  const url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}`;
+  const url = `${BASE_URL}/${endpoint}${endpoint.includes('?') ? '&' : '?'}api_key=${API_KEY}`;
   try {
     const response = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
     if (!response.ok) {
@@ -111,7 +111,7 @@ export async function getContentDetails(id: string, type: ContentType): Promise<
 }
 
 export async function searchContent(query: string): Promise<ContentItem[]> {
-  const data = await fetchFromTmdb(`search/multi&query=${encodeURIComponent(query)}`);
+  const data = await fetchFromTmdb(`search/multi?query=${encodeURIComponent(query)}`);
   if (!data) return [];
 
   return data.results
